@@ -32,10 +32,13 @@ def index():
     if request.method == 'POST':
         text = request.form['text']
         if text:
-            response = comprehend.detect_sentiment(Text=text, LanguageCode='en')
-            sentiment = response['Sentiment']
-            scores = response['SentimentScore']
+            try:
+                response = comprehend.detect_sentiment(Text=text, LanguageCode='en')
+                sentiment = response['Sentiment']
+                scores = response['SentimentScore']
+            except Exception as e:
+                print("ERROR:", str(e))
+                return f"<h3>Error: {str(e)}</h3>", 500
     return render_template('index.html', sentiment=sentiment, scores=scores)
-
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
